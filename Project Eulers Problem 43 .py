@@ -1,6 +1,7 @@
 #  -- Project Eulers Problem 43
 
-# The number, 1406357289, is a 0 to 9 pandigital number because it is made up of each of the digits 0 to 9 in some order, but it also has a rather interesting sub-string divisibility property.
+# The number, 1406357289, is a 0 to 9 pandigital number because it is made up of each of the digits 0 to 9 in some order, 
+# but it also has a rather interesting sub-string divisibility property.
 
 # Let d1 be the 1st digit, d2 be the 2nd digit, and so on. In this way, we note the following:
 
@@ -16,36 +17,32 @@ from itertools import permutations as perm
 from datetime import datetime
 start = datetime.now()
 
+def substring_divisibility():
+    total = 0
 
-def is_divisible(tup:tuple):
-    
+    # Hard coding divisors first digit of a slice to be checked if it's divisible
+     
+    d_list = list(range(1,8))
     divisors = [2,3,5,7,11,13,17]
-    first_digit = list(range(1,8))
 
-    if tup [0] != '0':  
-        string_number = "".join(tup)
+    # Pandigital numbers in essence are permutations of number 0-9 
+    # whose first digit is not 0
 
-        for l_slice, divisor in zip(first_digit, divisors):
+    number_list = [str(x) for x in list(range(10))] 
+    
+    for permutation in perm(number_list):
 
-            r_slice = l_slice + 3
+        if permutation[0] != '0':
 
-            if int(string_number[l_slice : r_slice]) % divisor != 0:
-                return False
-        return True
-    else:
-        return False
+            string_number = "".join(permutation)
 
-        
-
-number_list = [str(x) for x in list(range(10))] # Generating a string in order to convert tuple to a number
-total = 0
-
-
-for permutation in perm(number_list): # Permutations of number list are pandigital by definition
-    if is_divisible(permutation):
-        pandigital_number = int("".join(permutation))
-        total += pandigital_number
-
-print(total, datetime.now()- start, sep='\n')
+            for d, divisor in zip(d_list,divisors):
+                if int(string_number[d:d+3]) % divisor != 0:
+                    break     
+            else:
+                total += int(string_number)
+    
+    return total
 
 
+print(substring_divisibility(), datetime.now()- start, sep='\n')
